@@ -1,3 +1,7 @@
+# Репозиторий переезжает в архив.
+
+Используйте новую версию [https://github.com/AltmanEA/course_react_lab](https://github.com/AltmanEA/course_react_lab).
+
 # Задачи по react
 
 В проекте собраны задачи по react из учебника [LEARN REACT](https://react.dev/learn).
