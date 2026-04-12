@@ -1,10 +1,6 @@
-// 1_1_3 Spot the mistake
-/* 
-  Исправьте ошибку в компоненте Profile.
-  Вспомните, как react отличает компоненты от обычных HTML-тегов.
-*/
-
-function profile() {
+// React отличает компоненты от обычных HTML-тегов по заглавной первой букве.
+// Функция компонента теперь называется 'Profile' с заглавной 'P', а также обновлены еë вызовы.
+function Profile() {
     return (
       <img
         src="AlanHart.jpg"
@@ -17,9 +13,9 @@ function profile() {
     return (
       <section>
         <h1>Amazing scientists</h1>
-        <profile />
-        <profile />
-        <profile />
+        <Profile />
+        <Profile />
+        <Profile />
       </section>
     );
   }
