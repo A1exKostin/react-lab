@@ -5,23 +5,41 @@
 
 import { recipes } from './data';
 
+// Компонент Recipe извлечен для упрощения кода RecipeList.
+// Обратите внимание, что атрибут key должен быть передан непосредственно при рендере компонента <Recipe />
+// внутри метода map, так как React отслеживает ключи в том массиве элементов, который создается итерацией.
+interface RecipeProps {
+    id: string;
+    name: string;
+    ingredients: string[];
+}
+
+function Recipe({ name, ingredients }: RecipeProps) {
+    return (
+        <div>
+            <h2>{name}</h2>
+            <ul>
+                {ingredients.map(ingredient => (
+                    <li key={ingredient}>
+                        {ingredient}
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+}
+
 export default function RecipeList() {
     return (
         <div>
             <h1>Recipes</h1>
-            {recipes.map((recipe) => (
-                <div key={recipe.id}>
-                    <h2>{recipe.name}</h2>
-                    <ul>
-                        {recipe.ingredients.map(
-                            (ingredient) => (
-                                <li key={ingredient}>
-                                    {ingredient}
-                                </li>
-                            )
-                        )}
-                    </ul>
-                </div>
+            {recipes.map(recipe => (
+                <Recipe
+                    key={recipe.id}
+                    id={recipe.id}
+                    name={recipe.name}
+                    ingredients={recipe.ingredients}
+                />
             ))}
         </div>
     );
