@@ -11,15 +11,18 @@ export default function ClockWrapper() {
   return <Clock time={new Date()} />;
 }
 
+// Компонент Clock переделан в чистую функцию. Вместо прямого доступа к DOM (что нарушает
+// принципы декларативного рендеринга в React), вычисляется строка для класса className,
+// которая подставляется напрямую в JSX.
 function Clock({ time }: { time: Date }) {
   const hours = time.getHours();
-  const elem = document.getElementById("time");
-  if (elem)
-    if (hours >= 0 && hours <= 6) {
-      elem.className = "night";
-    } else {
-      elem.className = "day";
-    }
-  return <h1 id="time">{time.toLocaleTimeString()}</h1>;
+  let className;
+  
+  if (hours >= 0 && hours <= 6) {
+    className = "night";
+  } else {
+    className = "day";
+  }
+  
+  return <h1 id="time" className={className}>{time.toLocaleTimeString()}</h1>;
 }
-
