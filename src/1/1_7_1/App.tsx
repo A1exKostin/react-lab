@@ -1,10 +1,3 @@
-// 1_7_1 Splitting a list in two 
-/*
-  В этом примере показан список всех людей.
-
-  Измените его, чтобы последовательно вывести два отдельных списка: Химики и Все остальные. Как и ранее, вы можете определить, является ли человек химиком, проверив, что person.profession === 'chemist'.
-*/
-
 import { people } from './data.js';
 import { getImageUrl } from './utils.js';
 
@@ -16,8 +9,13 @@ export type Person = {
   imageId: string;
 }
 
+// Массив данных разделен на две категории ('chemist' и все остальные) с помощью метода filter.
+// Для каждой категории сформирован свой массив элементов (JSX) и они выводятся под отдельными заголовками.
 export default function List() {
-    const listItems = people.map((person) => (
+    const chemists = people.filter((person: Person) => person.profession === 'chemist');
+    const everyoneElse = people.filter((person: Person) => person.profession !== 'chemist');
+
+    const chemistItems = chemists.map((person: Person) => (
         <li key={person.id}>
             <img
                 src={getImageUrl(person)}
@@ -30,10 +28,28 @@ export default function List() {
             </p>
         </li>
     ));
+
+    const everyoneElseItems = everyoneElse.map((person: Person) => (
+        <li key={person.id}>
+            <img
+                src={getImageUrl(person)}
+                alt={person.name}
+            />
+            <p>
+                <b>{person.name}:</b>
+                {' ' + person.profession + ' '}
+                known for {person.accomplishment}
+            </p>
+        </li>
+    ));
+
     return (
         <article>
             <h1>Scientists</h1>
-            <ul>{listItems}</ul>
+            <h2>Chemists</h2>
+            <ul>{chemistItems}</ul>
+            <h2>Everyone Else</h2>
+            <ul>{everyoneElseItems}</ul>
         </article>
     );
 }
