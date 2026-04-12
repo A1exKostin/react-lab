@@ -2,28 +2,27 @@ import { Person } from './App.js';
 import Panel from './Panel.js';
 import { getImageUrl } from './utils.js';
 
-let currentPerson: Person
-
+// Глобальная переменная currentPerson удалена.
+// Данные теперь передаются явно через props.
 export default function Profile({ person }: { person: Person }) {
-    currentPerson = person;
     return (
         <Panel>
-            <Header />
-            <Avatar />
+            <Header person={person} />
+            <Avatar person={person} />
         </Panel>
     );
 }
 
-function Header() {
-    return <h1>{currentPerson.name}</h1>;
+function Header({ person }: { person: Person }) {
+    return <h1>{person.name}</h1>;
 }
 
-function Avatar() {
+function Avatar({ person }: { person: Person }) {
     return (
         <img
             className="avatar"
-            src={getImageUrl(currentPerson)}
-            alt={currentPerson.name}
+            src={getImageUrl(person)}
+            alt={person.name}
             width={50}
             height={50}
         />
