@@ -1,9 +1,8 @@
-import { useState } from 'react';
-
 export default function Clock(props: { time: string, color: string }) {
-  const [color, setColor] = useState(props.color);
+  // Ошибка: props.color использовался только для инициализации стейта.
+  // При обновлении пропсов стейт сам не обновляется. Решение — использовать пропс напрямую.
   return (
-    <h1 style={{ color: color }}>
+    <h1 style={{ color: props.color }}>
       {props.time}
     </h1>
   );
