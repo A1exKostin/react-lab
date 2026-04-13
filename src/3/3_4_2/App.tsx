@@ -1,14 +1,8 @@
-// 3_4_2 Swap two form fields
-/*
-  Эта форма позволяет вводить имя и фамилию. В ней также есть флажок, контролирующий, какое поле будет первым. Если установить флажок, поле "Фамилия" появится перед полем "Имя".
-
-  Это почти работает, но есть ошибка. Если вы заполните поле "Имя" и установите флажок, текст останется в первом поле (теперь это "Фамилия"). Исправьте это так, чтобы при изменении порядка ввода текст также перемещался.
-*/
-
 import { useState } from 'react';
 
 export default function App() {
   const [reverse, setReverse] = useState(false);
+
   let checkbox = (
     <label>
       <input
@@ -19,22 +13,27 @@ export default function App() {
       Reverse order
     </label>
   );
+
+  // Ошибка была в отсутствии уникальных ключей (key). 
+  // Без них React сопоставляет компоненты по их позиции в дереве. 
+  // При смене порядка стейт оставался на той же позиции, а не "переезжал" вместе с полем.
+
   if (reverse) {
     return (
       <>
-        <Field label="Last name" /> 
-        <Field label="First name" />
+        <Field key="lastName" label="Last name" />
+        <Field key="firstName" label="First name" />
         {checkbox}
       </>
     );
   } else {
     return (
       <>
-        <Field label="First name" /> 
-        <Field label="Last name" />
+        <Field key="firstName" label="First name" />
+        <Field key="lastName" label="Last name" />
         {checkbox}
       </>
-    );    
+    );
   }
 }
 
