@@ -1,8 +1,3 @@
-// 2_7_3 Fix the mutations using non-mutative methods  
-/*
-    В этом примере все обработчики событий в App.js используют мутацию. В результате редактирование и удаление todos не работает. Перепишите handleAddTodo, handleChangeTodo и handleDeleteTodo, чтобы они использовали немутационные методы:
-*/
-
 import { useState } from 'react';
 import AddTodo from './AddTodo';
 import TaskList from './TaskList';
@@ -23,27 +18,31 @@ const initialTodos = [
 export default function TaskApp() {
     const [todos, setTodos] = useState(initialTodos);
 
+    // Удалены мутации стейта. Теперь каждый обработчик создает новую копию массива и вызывает setTodos для обновления экрана.
+
     function handleAddTodo(title: string) {
-        todos.push({
-            id: nextId++,
-            title: title,
-            done: false,
-        });
+        setTodos([
+            ...todos,
+            {
+                id: nextId++,
+                title: title,
+                done: false,
+            }
+        ]);
     }
 
     function handleChangeTodo(nextTodo: Todo) {
-        const todo = todos.find(
-            (t) => t.id === nextTodo.id
-        )!!;
-        todo.title = nextTodo.title;
-        todo.done = nextTodo.done;
+        setTodos(todos.map(t => {
+            if (t.id === nextTodo.id) {
+                return nextTodo;
+            } else {
+                return t;
+            }
+        }));
     }
 
     function handleDeleteTodo(todoId: number) {
-        const index = todos.findIndex(
-            (t) => t.id === todoId
-        );
-        todos.splice(index, 1);
+        setTodos(todos.filter(t => t.id !== todoId));
     }
 
     return (
