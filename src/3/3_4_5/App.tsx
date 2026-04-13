@@ -1,10 +1,3 @@
-// 3_4_5 Fix misplaced state in the list 
-/*
-  В этом списке каждый Contact имеет состояние, которое определяет, была ли для него нажата галочка "Показать почту". Нажмите "Показать почту" для Алисы, а затем установите флажок "Показывать в обратном порядке". Вы заметите, что письмо Тейлора теперь развернуто, а письмо Алисы, которое переместилось в самый низ, кажется свернутым.
-
-  Исправьте это так, чтобы развернутое состояние было связано с каждым контактом, независимо от выбранного порядка.
-*/
-
 import { useState } from 'react';
 import Contact from './Contact';
 
@@ -21,7 +14,7 @@ export default function ContactList() {
       <label>
         <input
           type="checkbox"
-          //value={reverse}
+          checked={reverse}
           onChange={e => {
             setReverse(e.target.checked)
           }}
@@ -29,8 +22,11 @@ export default function ContactList() {
         Show in reverse order
       </label>
       <ul>
-        {displayedContacts.map((contact, i) =>
-          <li key={i}>
+        {displayedContacts.map((contact) =>
+          // Ошибка была в использовании индекса массива (i) в качестве ключа.
+          // При изменении порядка (reverse) состояние оставалось привязанным к индексу.
+          // Решение: использовать уникальный id контакта.
+          <li key={contact.id}>
             <Contact contact={contact} />
           </li>
         )}
