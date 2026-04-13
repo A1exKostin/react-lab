@@ -1,10 +1,3 @@
-// 2_6_1 Fix incorrect state updates 
-/*
-    В этой форме есть несколько ошибок. Несколько раз нажмите на кнопку, увеличивающую оценку. Заметьте, что он не увеличивается. Затем отредактируйте имя и фамилию и заметите, что оценка внезапно "подхватила" ваши изменения. Наконец, отредактируйте фамилию, и заметите, что оценка полностью исчезла.
-
-    Ваша задача — исправить все эти ошибки. Исправляя их, объясните, почему происходит каждая из них.
-*/
-
 import { useState } from 'react';
 
 export default function Scoreboard() {
@@ -15,20 +8,28 @@ export default function Scoreboard() {
     });
 
     function handlePlusClick() {
-        player.score++;
+        // Ошибка №1: Прямая мутация объекта (player.score++) не вызывает ререндер.
+        // Решение: Создаем новый объект с помощью spread-оператора.
+        setPlayer({
+            ...player,
+            score: player.score + 1,
+        });
     }
 
-    function handleFirstNameChange(e: any) {
+    function handleFirstNameChange(e: React.ChangeEvent<HTMLInputElement>) {
         setPlayer({
             ...player,
             firstName: e.target.value,
         });
     }
 
-    function handleLastNameChange(e: any) {
+    function handleLastNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+        // Ошибка №2: При обновлении фамилии объект заменялся новым целиком (терялись другие поля).
+        // Решение: Разворачиваем старое состояние (...player) перед записью нового поля.
         setPlayer({
+            ...player,
             lastName: e.target.value,
-        } as any);
+        });
     }
 
     return (
