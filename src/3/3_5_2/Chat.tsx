@@ -24,7 +24,15 @@ export default function Chat(
         }}
       />
       <br />
-      <button>Send to {contact.email}</button>
+      <button onClick={() => {
+        alert(`Sending "${message}" to ${contact.email}`);
+        dispatch({
+          type: 'sent_message',
+          message: ''
+        });
+      }}>
+        Send to {contact.email}
+      </button>
     </section>
   );
 }

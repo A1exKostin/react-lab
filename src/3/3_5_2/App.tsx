@@ -1,11 +1,3 @@
-// 3_5_2 Clear the input on sending a message
-/*
-  В настоящее время нажатие кнопки "Отправить" ничего не делает. Добавьте обработчик события для кнопки "Отправить", который будет:
-
-  - Показывать alert с электронной почтой получателя и сообщением.
-  - Очищать вход сообщения.
-*/
-
 import { useReducer } from 'react';
 import Chat from './Chat';
 import ContactList from './ContactList';
