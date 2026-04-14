@@ -1,8 +1,3 @@
-// 4_7_1 Fix a resetting interval
-/*
-  Этот Эффект устанавливает интервал, который тикает каждую секунду. Вы заметили, что происходит что-то странное: кажется, что интервал уничтожается и создается заново каждый раз, когда он тикает. Исправьте код так, чтобы интервал не создавался постоянно заново.
-*/
-
 import { useState, useEffect } from 'react';
 
 export default function Timer() {
@@ -12,13 +7,15 @@ export default function Timer() {
         console.log('✅ Creating an interval');
         const id = setInterval(() => {
             console.log('⏰ Interval tick');
-            setCount(count + 1);
+            // Используем функциональное обновление, чтобы не зависеть от внешней переменной count
+            setCount(c => c + 1);
         }, 1000);
+        
         return () => {
             console.log('❌ Clearing an interval');
             clearInterval(id);
         };
-    }, [count]);
+    }, []); // Пустой массив зависимостей: интервал создается только при монтировании
 
     return <h1>Counter: {count}</h1>;
 }
