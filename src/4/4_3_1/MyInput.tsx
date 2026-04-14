@@ -9,10 +9,13 @@ export default function MyInput(
         onChange: (e: React.ChangeEvent<HTMLInputElement>) => void
     }) {
 
-    const ref = useRef(null);
+    const ref = useRef<HTMLInputElement>(null);
 
-    // TODO: This doesn't quite work. Fix it.
-    // ref.current.focus()    
+    // Используем useEffect для выполнения кода при монтировании компонента
+    useEffect(() => {
+        // Устанавливаем фокус на input после того, как он появился в DOM
+        ref.current?.focus();
+    }, []); // Пустой массив зависимостей гарантирует выполнение только при первом рендере
 
     return (
         <input
