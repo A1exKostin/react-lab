@@ -1,12 +1,3 @@
-// 4_5_5 Populate a chain of select boxes
-/*
-  В этом примере есть два поля выбора. Одно поле позволяет пользователю выбрать планету. Другое поле позволяет пользователю выбрать место на этой планете. Второе поле пока не работает. Ваша задача - заставить его показывать места на выбранной планете.
-
-  Посмотрите, как работает первое поле выбора. Оно заполняет состояние planetList результатом вызова API "/planets". ID выбранной планеты хранится в переменной состояния planetId. Вам нужно найти, куда добавить дополнительный код, чтобы переменная состояния placeList заполнялась результатом вызова API "/planets/" + planetId + "/places".
-
-  Если вы реализуете это правильно, выбор планеты должен заполнить список мест. Изменение планеты должно изменить список мест.
-*/
-
 import { useState, useEffect } from 'react';
 import { fetchData, GeoObj } from './api';
 
@@ -17,19 +8,39 @@ export default function Page() {
   const [placeList, setPlaceList] = useState<GeoObj[]>([]);
   const [placeId, setPlaceId] = useState<string>('');
 
+  // Загрузка списка планет при монтировании
   useEffect(() => {
     let ignore = false;
     fetchData('/planets').then(result => {
       if (!ignore) {
         console.log('Fetched a list of planets.');
         setPlanetList(result);
-        setPlanetId(result[0].id); // Select the first planet
+        setPlanetId(result[0].id); // Выбираем первую планету по умолчанию
       }
     });
     return () => {
       ignore = true;
     }
   }, []);
+
+  // Загрузка списка мест при выборе или смене планеты
+  useEffect(() => {
+    if (planetId === '') {
+      return;
+    }
+
+    let ignore = false;
+    fetchData('/planets/' + planetId + '/places').then(result => {
+      if (!ignore) {
+        console.log('Fetched a list of places for ' + planetId + '.');
+        setPlaceList(result);
+        setPlaceId(result[0].id); // Выбираем первое место по умолчанию
+      }
+    });
+    return () => {
+      ignore = true;
+    };
+  }, [planetId]); // Эффект срабатывает при изменении planetId
 
   return (
     <>
