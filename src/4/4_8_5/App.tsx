@@ -1,29 +1,32 @@
-// 4_8_5  Implement a staggering movement
-/*
-  В этом примере хук usePointerPosition() отслеживает текущую позицию указателя. Попробуйте переместить курсор или палец по области предварительного просмотра и увидите, как красная точка следует за вашим движением. Ее положение сохраняется в переменной pos1.
-
-  На самом деле, в данный момент отображается пять (!) различных красных точек. Вы не видите их, потому что в настоящее время все они отображаются в одном и том же положении. Это то, что вам нужно исправить. Вместо этого вы хотите реализовать "ступенчатое" движение: каждая точка должна "следовать" по пути предыдущей точки. Например, если вы быстро перемещаете курсор, первая точка должна следовать за ним немедленно, вторая точка должна следовать за первой с небольшой задержкой, третья точка должна следовать за второй и так далее.
-
-  Вам необходимо реализовать пользовательский хук useDelayedValue. Его текущая реализация возвращает предоставленное ему value. Вместо этого вы хотите возвращать значение, полученное от delay миллисекунды назад. Для этого вам может понадобиться некоторое состояние и Эффект.
-
-  После реализации useDelayedValue, вы должны увидеть, как точки движутся друг за другом.
-*/
-
+import { useState, useEffect } from 'react';
 import { usePointerPosition } from './usePointerPosition.ts';
 
 type Position = { x: number, y: number };
 
 function useDelayedValue(value: Position, delay: number) {
-  // TODO: Implement this Hook
-  return value;
+  // Храним задержанное значение в состоянии
+  const [delayedValue, setDelayedValue] = useState(value);
+
+  useEffect(() => {
+    // Устанавливаем таймер для обновления значения через указанную задержку
+    const timeoutId = setTimeout(() => {
+      setDelayedValue(value);
+    }, delay);
+
+    // Очищаем таймер при изменении входящего значения или задержки
+    return () => clearTimeout(timeoutId);
+  }, [value, delay]);
+
+  return delayedValue;
 }
 
 export default function Canvas() {
   const pos1 = usePointerPosition();
   const pos2 = useDelayedValue(pos1, 100);
-  const pos3 = useDelayedValue(pos2, 200);
-  const pos4 = useDelayedValue(pos3, 100);
-  const pos5 = useDelayedValue(pos3, 50);
+  const pos3 = useDelayedValue(pos1, 200); // Чтобы цепочка была логичной, точки должны следовать за основной
+  const pos4 = useDelayedValue(pos1, 300);
+  const pos5 = useDelayedValue(pos1, 400);
+
   return (
     <>
       <Dot position={pos1} opacity={1} />
