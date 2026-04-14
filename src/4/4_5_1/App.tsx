@@ -1,10 +1,3 @@
-// 4_5_1 Fix reconnecting on every keystroke
-/*
-  В этом примере компонент ChatRoom подключается к чату, когда он монтируется, отключается, когда размонтируется, и снова подключается, когда вы выбираете другой чат. Такое поведение является правильным, поэтому необходимо, чтобы оно работало.
-
-  Однако существует проблема. Всякий раз, когда вы вводите текст в поле ввода сообщения внизу, ChatRoom также переподключается к чату. (Вы можете заметить это, очистив консоль и введя текст в поле ввода). Исправьте проблему, чтобы этого не происходило.
-*/
-
 import { useState, useEffect } from 'react';
 import { createConnection } from './chat';
 
@@ -17,7 +10,7 @@ function ChatRoom({ roomId }: { roomId: string }) {
     const connection = createConnection(serverUrl, roomId);
     connection.connect();
     return () => connection.disconnect();
-  });
+  }, [roomId]); // Добавляем массив зависимостей, чтобы подключение зависело только от roomId
 
   return (
     <>
