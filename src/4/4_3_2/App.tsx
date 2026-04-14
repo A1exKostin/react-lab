@@ -1,16 +1,8 @@
-// 4_3_2 Focus a field conditionally
-/*
-  Эта форма отображает два компонента <MyInput />.
-
-  Нажмите "Показать форму" и обратите внимание, что второе поле автоматически фокусируется. Это происходит потому, что оба компонента <MyInput /> пытаются сфокусировать поле внутри. Когда вы вызываете focus() для двух полей ввода подряд, последнее всегда "побеждает".
-
-  Допустим, вы хотите сфокусировать первое поле. Первый компонент MyInput теперь получает булево свойство shouldFocus, установленное в true. Измените логику так, чтобы focus() вызывалась только в том случае, если пропс shouldFocus, полученный MyInput, равен true.
-*/
-
 import { useState } from 'react';
 import MyInput from './MyInput.tsx';
 
 export default function Form() {
+  // Управление видимостью формы
   const [show, setShow] = useState(false);
   const [firstName, setFirstName] = useState('Taylor');
   const [lastName, setLastName] = useState('Swift');
