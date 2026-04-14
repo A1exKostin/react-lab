@@ -1,27 +1,40 @@
-// 4_2_3 Scrolling an image carouse
-/*
-  Эта карусель изображений имеет кнопку "Next", которая переключает активное изображение. Заставьте галерею прокручиваться горизонтально до активного изображения по щелчку. Для этого нужно вызвать scrollIntoView() на DOM-узле активного изображения:
-  
-  node.scrollIntoView({
-    behavior: 'smooth',
-    block: 'nearest',
-    inline: 'center',
-  });
-*/
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { flushSync } from 'react-dom';
 
 export default function CatFriends() {
   const [index, setIndex] = useState(0);
+  // Используем Map для хранения ссылок на все элементы списка
+  const itemsRef = useRef<Map<number, HTMLImageElement>>(null);
+
+  function getMap() {
+    if (!itemsRef.current) {
+      // Инициализируем Map при первом обращении
+      (itemsRef as any).current = new Map();
+    }
+    return itemsRef.current!;
+  }
+
+  function handleNext() {
+    const nextIndex = (index < catList.length - 1) ? index + 1 : 0;
+    
+    // flushSync заставляет React обновить DOM немедленно
+    flushSync(() => {
+      setIndex(nextIndex);
+    });
+
+    // Теперь, когда DOM обновлен, мы можем прокрутить к активному элементу
+    const node = getMap().get(nextIndex);
+    node?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    });
+  }
+
   return (
     <>
       <nav>
-        <button onClick={() => {
-          if (index < catList.length - 1) {
-            setIndex(index + 1);
-          } else {
-            setIndex(0);
-          }
-        }}>
+        <button onClick={handleNext}>
           Next
         </button>
       </nav>
@@ -30,13 +43,18 @@ export default function CatFriends() {
           {catList.map((cat, i) => (
             <li key={cat.id}>
               <img
-                className={
-                  index === i ?
-                    'active' :
-                    ''
-                }
+                className={index === i ? 'active' : ''}
                 src={cat.imageUrl}
                 alt={'Cat #' + cat.id}
+                // Сохраняем ссылку на элемент в Map
+                ref={(node) => {
+                  const map = getMap();
+                  if (node) {
+                    map.set(i, node);
+                  } else {
+                    map.delete(i);
+                  }
+                }}
               />
             </li>
           ))}
@@ -55,7 +73,7 @@ const catList: PlaceType[] = [];
 for (let i = 0; i < 10; i++) {
   catList.push({
     id: i,
-    imageUrl: `cat${i}.jpg`
+    imageUrl: `https://loremflickr.com/250/200/cat?lock=${i}` // Используем реальные изображения для наглядности
   });
 }
 
