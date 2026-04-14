@@ -1,10 +1,3 @@
-// 4_6_1 Fix a variable that doesn’t update 
-/*
-  Этот компонент Timer хранит переменную состояния count, которая увеличивается каждую секунду. Значение, на которое она увеличивается, хранится в переменной состояния increment. Вы можете управлять переменной increment с помощью кнопок плюс и минус.
-
-  Однако, сколько бы раз вы ни нажали на кнопку с плюсом, счетчик все равно увеличивается на единицу каждую секунду. Что не так с этим кодом? Почему increment всегда равен 1 в коде Effect'а? Найдите ошибку и исправьте ее.
-*/
-
 import { useState, useEffect } from 'react';
 
 export default function Timer() {
@@ -12,14 +5,15 @@ export default function Timer() {
   const [increment, setIncrement] = useState(1);
 
   useEffect(() => {
+    // Создаем интервал, который использует текущее значение increment
     const id = setInterval(() => {
       setCount(c => c + increment);
     }, 1000);
+    // Очищаем интервал при изменении increment или размонтировании
     return () => {
       clearInterval(id);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [increment]); // Добавляем increment в зависимости
 
   return (
     <>
